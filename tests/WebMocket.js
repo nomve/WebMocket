@@ -5,7 +5,8 @@ describe('WebMocket', () => {
     
     let socket,
         server,
-        testUrl = 'test-url';
+        testUrl = 'test-url',
+        realWebSocket = window.WebSocket;
     
     beforeEach(() => {
         window.WebSocket = WebMocket;
@@ -40,5 +41,9 @@ describe('WebMocket', () => {
         socket.onmessage = spy;
         server.send(data);
         expect(spy.args[0][0].data).to.equal(data);
+    });
+    
+    it('should have the open readystate on construction', () => {
+        expect(socket.readyState).to.equal(realWebSocket.OPEN);
     });
 });

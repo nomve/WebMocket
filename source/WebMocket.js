@@ -1,8 +1,10 @@
 let instanceCallbacks = new Map();
+let realWebSocket = window.WebSocket;
 
 export class WebMocket {
     constructor(url) {
         this.url = url;
+        this.readyState = realWebSocket.OPEN;
         instanceCallbacks.set(this, new Map());
     }
     
