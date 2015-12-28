@@ -1,0 +1,44 @@
+{
+  "name": "WebMocket",
+  "version": "0.0.0",
+  "description": "very simple websocket client mock",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nomve/WebMocket.git"
+  },
+  "keywords": [
+    "websocket",
+    "mock"
+  ],
+  "author": "Goran Košutić",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nomve/WebMocket/issues"
+  },
+  "homepage": "https://github.com/nomve/WebMocket#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "jspm": "^0.16.15",
+    "karma": "^0.13.15",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-eslint": "^2.0.1",
+    "karma-jspm": "^2.0.2",
+    "karma-mocha": "^0.2.1",
+    "karma-mocha-reporter": "^1.1.3",
+    "karma-sinon": "^1.0.4",
+    "mocha": "^2.3.4",
+    "sinon": "^1.17.2"
+  },
+  "jspm": {
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  }
+}
