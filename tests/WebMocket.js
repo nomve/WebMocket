@@ -14,6 +14,10 @@ describe('WebMocket', () => {
         server = new MocketServer(testUrl);
     });
     
+    afterEach(() => {
+        server.close();
+    });
+    
     it('should construct', () => {
         expect(socket).to.be.an('object');
     });
