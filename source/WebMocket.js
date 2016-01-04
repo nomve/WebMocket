@@ -16,7 +16,7 @@ function openSocket(socket) {
     }, 0);
 }
 
-function initSocketEvents() {
+function socketEvents() {
     let events = new Map();
     ['open', 'message', 'close'].forEach(event => events.set(event, []));
     
@@ -69,9 +69,7 @@ export class WebMocket extends Connection {
     constructor(url) {
         super(url);
         this.readyState = realWebSocket.CONNECTING;
-        
-        let events = initSocketEvents(this);
-        socketCallbacks.set(this, events);
+        socketCallbacks.set(this, socketEvents());
         openSocket(this);
     }
     
@@ -92,10 +90,8 @@ export class WebMocket extends Connection {
 
 export class MocketServer extends Connection {
     constructor(url) {
-        super(url);
-        
-        let events = initSocketEvents(this);
-        serverCallbacks.set(this, events);
+        super(url);        
+        serverCallbacks.set(this, socketEvents());
     }
     
     send(data) {
