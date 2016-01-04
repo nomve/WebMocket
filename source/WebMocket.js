@@ -1,8 +1,9 @@
-let instanceCallbacks = new Map();
+let socketCallbacks = new Map();
+let serverCallbacks = new Map();
 let realWebSocket = window.WebSocket;
 
 function openSocket(socket) {
-    let events = instanceCallbacks.get(socket);
+    let events = socketCallbacks.get(socket);
     
     setTimeout(() => {
         socket.readyState = realWebSocket.OPEN;
@@ -15,24 +16,41 @@ function openSocket(socket) {
     }, 0);
 }
 
-function initSocketEvents(socket) {
+function initSocketEvents() {
     let events = new Map();
     ['open', 'message'].forEach(event => events.set(event, []));
-
-    instanceCallbacks.set(socket, events);
+    
+    return events;
 }
 
+function transferMessage(data, events, server) {
+    if (server.url === this.url) {
+        let event = new MessageEvent('message', {data: data});
+
+        events.get('message').forEach(callback => {
+            callback(event); 
+        });
+        if (typeof server.onmessage === 'function') {
+            server.onmessage(event);
+        }
+    }
+}
 export class WebMocket {
     constructor(url) {
         this.url = url;
         this.readyState = realWebSocket.CONNECTING;
         
-        initSocketEvents(this);
+        let events = initSocketEvents(this);
+        socketCallbacks.set(this, events);
         openSocket(this);
     }
     
+    send(data) {
+        serverCallbacks.forEach(transferMessage.bind(this, data));
+    }
+    
     addEventListener(event, callback) {
-        let events = instanceCallbacks.get(this);
+        let events = socketCallbacks.get(this);
         
         let callbacks = events.get(event);
         
@@ -45,19 +63,21 @@ export class WebMocket {
 export class MocketServer {
     constructor(url) {
         this.url = url;
+        
+        let events = initSocketEvents(this);
+        serverCallbacks.set(this, events);
     }
     send(data) {
-        instanceCallbacks.forEach((events, socket) => {
-            if (socket.url === this.url) {
-                let event = new MessageEvent('message', {data: data});
-                
-                events.get('message').forEach(callback => {
-                    callback(event); 
-                });
-                if (typeof socket.onmessage === 'function') {
-                    socket.onmessage(event);
-                }
-            } 
-        });
+        socketCallbacks.forEach(transferMessage.bind(this, data));
+    }
+    
+    addEventListener(event, callback) {
+        let events = serverCallbacks.get(this);
+        
+        let callbacks = events.get(event);
+        
+        if (typeof callbacks !== 'undefined') {
+            callbacks.push(callback);   
+        }
     }
 }

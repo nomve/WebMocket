@@ -43,6 +43,15 @@ describe('WebMocket', () => {
         expect(spy.args[0][0].data).to.equal(data);
     });
     
+    it('should be able to send data to the server', () => {
+        let spy = sinon.spy();
+        server.addEventListener('message', spy);
+        
+        let data = 1;
+        socket.send(data);
+        expect(spy.args[0][0].data).to.equal(data);
+    });
+    
     it('should have the connecting readystate on construction', () => {
         expect(socket.readyState).to.equal(realWebSocket.CONNECTING);
     });
