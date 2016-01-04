@@ -26,19 +26,19 @@ export class MocketServer {
     }
     send(data) {
         instanceCallbacks.forEach((events, socket) => {
-           if (socket.url === this.url) {
-               let event = new MessageEvent('message', {data: data}),
-                   messageCallbacks = events.get('message');
-               
-               if (typeof messageCallbacks !== 'undefined') {
-                   messageCallbacks.forEach(callback => {
-                      callback(event); 
-                   });
-               }
-               if (typeof socket.onmessage === 'function') {
+            if (socket.url === this.url) {
+                let event = new MessageEvent('message', {data: data}),
+                    messageCallbacks = events.get('message');
+
+                if (typeof messageCallbacks !== 'undefined') {
+                    messageCallbacks.forEach(callback => {
+                        callback(event); 
+                    });
+                }
+                if (typeof socket.onmessage === 'function') {
                     socket.onmessage(event);
-               }
-           } 
+                }
+            } 
         });
     }
 }

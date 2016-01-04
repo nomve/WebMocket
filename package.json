@@ -2,9 +2,11 @@
   "name": "WebMocket",
   "version": "0.0.0",
   "description": "very simple websocket client mock",
-  "main": "index.js",
+  "main": "WebMocket.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start --single-run",
+    "compile:cjs": "jspm bundle-sfx source/WebMocket.js WebMocket.js --format cjs",
+    "prepublish": "npm run compile:cjs"
   },
   "repository": {
     "type": "git",
