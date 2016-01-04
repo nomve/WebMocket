@@ -5,6 +5,7 @@ node_js:
 cache:
   directories:
     - node_modules
+    - jspm_packages
     
 before_install:
   - export CHROME_BIN=chromium-browser

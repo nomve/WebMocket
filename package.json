@@ -6,7 +6,8 @@
   "scripts": {
     "test": "karma start --single-run",
     "compile:cjs": "jspm bundle-sfx source/WebMocket.js WebMocket.js --format cjs",
-    "prepublish": "npm run compile:cjs"
+    "prepublish": "npm run compile:cjs",
+    "postinstall": "jspm install"
   },
   "repository": {
     "type": "git",
