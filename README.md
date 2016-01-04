@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nomve/WebMocket.svg?branch=master)](https://travis-ci.org/nomve/WebMocket)
+
 # WebMocket
 
 A WebSocket mock, that makes unit testing possible when there is a WebSocket connection involved. It is advisable to check out [mock-socket](https://github.com/thoov/mock-socket) that does the same thing and a bit more. However, at the time of this writing, it had problems working in Firefox.
