@@ -43,7 +43,24 @@ describe('WebMocket', () => {
         expect(spy.args[0][0].data).to.equal(data);
     });
     
-    it('should have the open readystate on construction', () => {
-        expect(socket.readyState).to.equal(realWebSocket.OPEN);
+    it('should have the connecting readystate on construction', () => {
+        expect(socket.readyState).to.equal(realWebSocket.CONNECTING);
+    });
+    
+    it('should change the readystate to open when ready', (asyncDone) => {
+        setTimeout(() => {
+            expect(socket.readyState).to.equal(realWebSocket.OPEN);
+            asyncDone();
+        }, 0);
+    });
+    
+    it('should trigger the open event when ready', (asyncDone) => {
+        let spy = sinon.spy();
+        socket.addEventListener('open', spy);
+        socket.onopen = spy;
+        setTimeout(() => {
+            expect(spy.callCount).to.equal(2);
+            asyncDone();
+        }, 0);
     });
 });
