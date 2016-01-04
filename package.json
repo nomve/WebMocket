@@ -1,5 +1,5 @@
 {
-  "name": "WebMocket",
+  "name": "webmocket",
   "version": "0.0.0",
   "description": "very simple websocket client mock",
   "main": "WebMocket.js",
