@@ -28,15 +28,15 @@ function transfer(eventName, data, events, receiver) {
         let eventData;
         
         switch(eventName) {
-            case 'message':
-                eventData = new MessageEvent('message', {data: data});
-                break;
-            case 'close':
-                eventData = new CloseEvent('close', {
-                    code: data.code,
-                    reason: data.reason
-                });
-                break;
+        case 'message':
+            eventData = new MessageEvent('message', {data: data});
+            break;
+        case 'close':
+            eventData = new CloseEvent('close', {
+                code: data.code,
+                reason: data.reason
+            });
+            break;
         }
 
         events.get(eventName).forEach(callback => {
