@@ -18,23 +18,36 @@ function openSocket(socket) {
 
 function initSocketEvents() {
     let events = new Map();
-    ['open', 'message'].forEach(event => events.set(event, []));
+    ['open', 'message', 'close'].forEach(event => events.set(event, []));
     
     return events;
 }
 
-function transferMessage(data, events, server) {
-    if (server.url === this.url) {
-        let event = new MessageEvent('message', {data: data});
+function transfer(eventName, data, events, receiver) {
+    if (receiver.url === this.url) {
+        let eventData;
+        
+        switch(eventName) {
+            case 'message':
+                eventData = new MessageEvent('message', {data: data});
+                break;
+            case 'close':
+                eventData = new CloseEvent('close', {
+                    code: data.code,
+                    reason: data.reason
+                });
+                break;
+        }
 
-        events.get('message').forEach(callback => {
-            callback(event); 
+        events.get(eventName).forEach(callback => {
+            callback(eventData); 
         });
-        if (typeof server.onmessage === 'function') {
-            server.onmessage(event);
+        if (typeof receiver['on' + eventName] === 'function') {
+            receiver['on' + eventName](eventData);
         }
     }
 }
+
 export class WebMocket {
     constructor(url) {
         this.url = url;
@@ -46,7 +59,12 @@ export class WebMocket {
     }
     
     send(data) {
-        serverCallbacks.forEach(transferMessage.bind(this, data));
+        serverCallbacks.forEach(transfer.bind(this, 'message', data));
+    }
+    
+    close(code, reason) {
+        socketCallbacks.forEach(transfer.bind(this, 'close', {code, reason}));
+        serverCallbacks.forEach(transfer.bind(this, 'close', {code, reason}));
     }
     
     addEventListener(event, callback) {
@@ -67,8 +85,14 @@ export class MocketServer {
         let events = initSocketEvents(this);
         serverCallbacks.set(this, events);
     }
+    
     send(data) {
-        socketCallbacks.forEach(transferMessage.bind(this, data));
+        socketCallbacks.forEach(transfer.bind(this, 'message', data));
+    }
+    
+    close(code, reason) {
+        socketCallbacks.forEach(transfer.bind(this, 'close', {code, reason}));
+        serverCallbacks.forEach(transfer.bind(this, 'close', {code, reason}));
     }
     
     addEventListener(event, callback) {

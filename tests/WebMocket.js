@@ -72,4 +72,37 @@ describe('WebMocket', () => {
             asyncDone();
         }, 0);
     });
+    
+    it('should trigger the close event when closed by server', () => {
+        let spy = sinon.spy();
+        socket.addEventListener('close', spy);
+        socket.onclose = spy;
+        server.addEventListener('close', spy);
+        server.onclose = spy;
+        server.close();
+        expect(spy.callCount).to.equal(4);
+    });
+    
+    it('should trigger the close event when closed by client', () => {
+        let spy = sinon.spy();
+        socket.addEventListener('close', spy);
+        socket.onclose = spy;
+        server.addEventListener('close', spy);
+        server.onclose = spy;
+        socket.close();
+        expect(spy.callCount).to.equal(4);
+    });
+    
+    it('should pass close event data on close', () => {
+        let spy = sinon.spy();
+        socket.onclose = spy;
+        
+        let code = 999,
+            reason = 'reason';
+        server.close(code, reason);
+        
+        let eventData = spy.args[0][0];
+        expect(eventData.code).to.equal(code);
+        expect(eventData.reason).to.equal(reason);
+    });
 });
