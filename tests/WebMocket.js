@@ -126,5 +126,26 @@ describe('WebMocket', () => {
         expect(spy.callCount).to.equal(0);
     });
     
+    it('should not pass data to the server if it was closed', () => {
+        let spy = sinon.spy();
+        server.onmessage = spy;
+        
+        server.close();
+        socket.send(0);
+        
+        expect(spy.callCount).to.equal(0);
+    });
     
+    it('should pass data to server if connection closed by client', () => {
+        let spy = sinon.spy(),
+            secondSocket = new WebSocket(testUrl);
+        
+        server.onmessage = spy;
+        socket.close();
+        
+        let data = 1;
+        secondSocket.send(data);
+        
+        expect(spy.callCount).to.equal(1);
+    });
 });

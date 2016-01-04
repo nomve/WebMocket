@@ -62,6 +62,11 @@ class Connection {
                 socketCallbacks.delete(socket);
             }
         });
+        serverCallbacks.forEach((events, server) => {
+            if (server === this) {
+                serverCallbacks.delete(this);
+            }
+        });
     }
 }
 
@@ -90,7 +95,7 @@ export class WebMocket extends Connection {
 
 export class MocketServer extends Connection {
     constructor(url) {
-        super(url);        
+        super(url);
         serverCallbacks.set(this, socketEvents());
     }
     
