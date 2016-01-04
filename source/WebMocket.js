@@ -65,6 +65,12 @@ export class WebMocket {
     close(code, reason) {
         socketCallbacks.forEach(transfer.bind(this, 'close', {code, reason}));
         serverCallbacks.forEach(transfer.bind(this, 'close', {code, reason}));
+        
+        socketCallbacks.forEach((events, socket) => {
+            if (socket.url === this.url) {
+                socketCallbacks.delete(socket);
+            }
+        });
     }
     
     addEventListener(event, callback) {
@@ -93,6 +99,12 @@ export class MocketServer {
     close(code, reason) {
         socketCallbacks.forEach(transfer.bind(this, 'close', {code, reason}));
         serverCallbacks.forEach(transfer.bind(this, 'close', {code, reason}));
+        
+        socketCallbacks.forEach((events, socket) => {
+            if (socket.url === this.url) {
+                socketCallbacks.delete(socket);
+            }
+        });
     }
     
     addEventListener(event, callback) {

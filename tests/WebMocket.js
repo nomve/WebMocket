@@ -105,4 +105,26 @@ describe('WebMocket', () => {
         expect(eventData.code).to.equal(code);
         expect(eventData.reason).to.equal(reason);
     });
+    
+    it('should not pass data if the connection was closed by server', () => {
+        let spy = sinon.spy();
+        socket.onmessage = spy;
+        
+        server.close();
+        server.send(0);
+        
+        expect(spy.callCount).to.equal(0);
+    });
+    
+    it('should not pass data if the connection was closed by client', () => {
+        let spy = sinon.spy();
+        socket.onmessage = spy;
+        
+        socket.close();
+        server.send(0);
+        
+        expect(spy.callCount).to.equal(0);
+    });
+    
+    
 });
