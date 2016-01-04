@@ -48,18 +48,9 @@ function transfer(eventName, data, events, receiver) {
     }
 }
 
-export class WebMocket {
+class Connection {
     constructor(url) {
         this.url = url;
-        this.readyState = realWebSocket.CONNECTING;
-        
-        let events = initSocketEvents(this);
-        socketCallbacks.set(this, events);
-        openSocket(this);
-    }
-    
-    send(data) {
-        serverCallbacks.forEach(transfer.bind(this, 'message', data));
     }
     
     close(code, reason) {
@@ -71,6 +62,21 @@ export class WebMocket {
                 socketCallbacks.delete(socket);
             }
         });
+    }
+}
+
+export class WebMocket extends Connection {
+    constructor(url) {
+        super(url);
+        this.readyState = realWebSocket.CONNECTING;
+        
+        let events = initSocketEvents(this);
+        socketCallbacks.set(this, events);
+        openSocket(this);
+    }
+    
+    send(data) {
+        serverCallbacks.forEach(transfer.bind(this, 'message', data));
     }
     
     addEventListener(event, callback) {
@@ -84,9 +90,9 @@ export class WebMocket {
     }
 }
 
-export class MocketServer {
+export class MocketServer extends Connection {
     constructor(url) {
-        this.url = url;
+        super(url);
         
         let events = initSocketEvents(this);
         serverCallbacks.set(this, events);
@@ -94,17 +100,6 @@ export class MocketServer {
     
     send(data) {
         socketCallbacks.forEach(transfer.bind(this, 'message', data));
-    }
-    
-    close(code, reason) {
-        socketCallbacks.forEach(transfer.bind(this, 'close', {code, reason}));
-        serverCallbacks.forEach(transfer.bind(this, 'close', {code, reason}));
-        
-        socketCallbacks.forEach((events, socket) => {
-            if (socket.url === this.url) {
-                socketCallbacks.delete(socket);
-            }
-        });
     }
     
     addEventListener(event, callback) {
