@@ -39,6 +39,7 @@
     "sinon": "^1.17.2"
   },
   "jspm": {
+    "main": "source/WebMocket.js",
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
       "babel-runtime": "npm:babel-runtime@^5.8.24",
